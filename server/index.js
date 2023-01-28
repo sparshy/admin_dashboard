@@ -10,6 +10,11 @@ import  generalRoutes from "./routes/general.js"
 import  salesRoutes from "./routes/sales.js"
 import  managementRoutes from "./routes/management.js"
 
+//data imports
+import User from "./models/User.js";
+import {dataUser} from "./data/index.js"
+
+
 /* CONFIGURATION */
 dotenv.config();
 const app = express();
@@ -28,15 +33,18 @@ app.use("/general", generalRoutes);
 app.use("management", managementRoutes);
 app.use("/sales", salesRoutes);
 
+
 /** MONGOOSE SETUP */
 
 const PORT = process.env.PORT || 9000;
-
+mongoose.set('strictQuery', false);
 ;mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(() => {
-    app.listen(PORT, () => console.log(`Server Port: ${PORT}`))
+    app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
+    /**only add data one time */
+   // User.insertMany(dataUser);
 }).catch((error) => {
     console.log("didn't connect")
 })
